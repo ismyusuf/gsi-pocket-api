@@ -9,6 +9,26 @@ use Illuminate\Support\Facades\Auth;
 
 class PocketController extends Controller
 {
+    public function index()
+    {
+        $user = Auth::user();
+
+        $pockets = Pocket::where('user_id', $user->id)
+            ->get()
+            ->map(fn($pocket) => [
+                'id'              => $pocket->id,
+                'name'            => $pocket->name,
+                'current_balance' => $pocket->balance,
+            ]);
+
+        return response()->json([
+            'status'  => 200,
+            'error'   => false,
+            'message' => 'Berhasil.',
+            'data'    => $pockets,
+        ]);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([
