@@ -29,6 +29,22 @@ class PocketController extends Controller
         ]);
     }
 
+    public function totalBalance()
+    {
+        $user = Auth::user();
+
+        $total = Pocket::where('user_id', $user->id)->sum('balance');
+
+        return response()->json([
+            'status'  => 200,
+            'error'   => false,
+            'message' => 'Berhasil menambahkan expense.',
+            'data'    => [
+                'total' => $total,
+            ],
+        ]);
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([

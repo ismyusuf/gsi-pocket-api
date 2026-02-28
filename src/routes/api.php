@@ -10,6 +10,7 @@ Route::post('auth/login', [AuthController::class, 'login']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/auth/profile', [AuthController::class, 'profile']);
+    Route::get('/pockets/total-balance', [PocketController::class, 'totalBalance']);
     Route::get('/pockets', [PocketController::class, 'index']);
     Route::post('/pockets', [PocketController::class, 'store']);
     Route::post('/incomes', [IncomeController::class, 'store']);
