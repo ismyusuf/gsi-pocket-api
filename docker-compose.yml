@@ -13,6 +13,22 @@ services:
     networks:
       - laravel
 
+  queue:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: laravel_queue
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - ./src:/var/www
+    command: php artisan queue:work --tries=3 --timeout=120
+    depends_on:
+      - db
+      - app
+    networks:
+      - laravel
+
   webserver:
     image: nginx:latest
     container_name: laravel_nginx

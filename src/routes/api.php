@@ -13,6 +13,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/pockets/total-balance', [PocketController::class, 'totalBalance']);
     Route::get('/pockets', [PocketController::class, 'index']);
     Route::post('/pockets', [PocketController::class, 'store']);
+    Route::post('/pockets/{id}/create-report', [PocketController::class, 'createReport']);
     Route::post('/incomes', [IncomeController::class, 'store']);
     Route::post('/expenses', [ExpenseController::class, 'store']);
 });
