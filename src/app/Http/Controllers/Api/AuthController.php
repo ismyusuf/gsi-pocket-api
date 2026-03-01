@@ -43,7 +43,7 @@ class AuthController extends Controller
             'error' => false,
             'message' => 'Berhasil login.',
             'data' => [
-                'full_name' => $user->name,
+                'full_name' => $user->full_name,
                 'email' => $user->email,
             ]
         ]);

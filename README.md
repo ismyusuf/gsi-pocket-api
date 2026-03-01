@@ -8,6 +8,7 @@ A RESTful API for personal pocket / wallet management built with **Laravel 12**,
 
 - [Prerequisites](#prerequisites)
 - [Reproducibility](#reproducibility)
+- [Testing](#testing)
 - [API Reference](#api-reference)
 
 ---
@@ -119,6 +120,80 @@ To also remove the database volume:
 ```bash
 docker compose down -v
 ```
+
+---
+
+## Testing
+
+The test suite uses **PHPUnit** with an in-memory **SQLite** database — no separate test database setup required.
+
+### Run all tests
+
+```bash
+docker exec laravel_app php artisan test
+```
+
+### Run only the API tests
+
+```bash
+docker exec laravel_app php artisan test --filter ApiTest
+```
+
+### Run with verbose output
+
+```bash
+docker exec laravel_app php artisan test --filter ApiTest --verbose
+```
+
+### Expected output
+
+```
+   PASS  Tests\Feature\ApiTest
+  ✓ user can login with valid credentials
+  ✓ login fails with wrong password
+  ✓ login validates required fields
+  ✓ user can get own profile
+  ✓ profile requires authentication
+  ✓ user can create pocket
+  ✓ create pocket validates required fields
+  ✓ create pocket requires authentication
+  ✓ user can list own pockets
+  ✓ list pockets does not include other users pockets
+  ✓ user can create income and balance increases
+  ✓ create income validates required fields
+  ✓ create income requires authentication
+  ✓ user can create expense and balance decreases
+  ✓ create expense validates required fields
+  ✓ create expense requires authentication
+  ✓ user can get total balance across all pockets
+  ✓ total balance is zero when no pockets
+  ✓ total balance only counts own pockets
+  ✓ user can create report and job is dispatched
+  ✓ create report validates type and date
+  ✓ create report returns 404 for another users pocket
+  ✓ report stream downloads xlsx file
+  ✓ report stream returns 404 when file missing
+  ✓ full api flow
+
+  Tests:    25 passed (99 assertions)
+```
+
+### Test coverage summary
+
+| Endpoint | Tests |
+|----------|-------|
+| `POST /api/auth/login` | valid credentials, wrong password, validation |
+| `GET /api/auth/profile` | returns profile, requires auth |
+| `POST /api/pockets` | creates pocket, validation, requires auth |
+| `GET /api/pockets` | lists own pockets, isolates other users |
+| `POST /api/incomes` | balance increases, validation, requires auth |
+| `POST /api/expenses` | balance decreases, validation, requires auth |
+| `GET /api/pockets/total-balance` | correct total, zero when empty, isolates users |
+| `POST /api/pockets/:id/create-report` | dispatches job, validation, 404 for other user's pocket |
+| `GET /reports/:id` | streams file, 404 when missing |
+| **Full e2e flow** | complete API flow in README order |
+
+> The test environment is fully self-contained. `JWT_SECRET` and `APP_KEY` are pre-configured in `phpunit.xml` so no `.env` changes are needed to run tests.
 
 ---
 
