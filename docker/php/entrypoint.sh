@@ -42,3 +42,5 @@ if [ -d "/var/www/bootstrap/cache" ]; then
 fi
 
 exec "$@"
+
+exec "$@"
