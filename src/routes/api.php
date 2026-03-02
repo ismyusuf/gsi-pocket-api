@@ -5,8 +5,10 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ExpenseController;
 use App\Http\Controllers\Api\IncomeController;
 use App\Http\Controllers\Api\PocketController;
+use App\Http\Controllers\ReportController;
 
 Route::post('auth/login', [AuthController::class, 'login']);
+Route::get('/reports/{id}', [ReportController::class, 'stream']);
 
 Route::middleware('auth:api')->group(function () {
     Route::get('/auth/profile', [AuthController::class, 'profile']);

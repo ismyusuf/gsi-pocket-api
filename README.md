@@ -36,29 +36,14 @@ git clone https://github.com/ismyusuf/gsi-pocket-api.git
 cd gsi-pocket-api
 ```
 
-### 2. Configure the environment
+### 2. Configure the environment (optional)
 
-Copy the example environment file and adjust values as needed:
+If `src/.env` does not exist it is **automatically created** from `src/.env.example` when the container starts. The defaults already match the Docker Compose database settings, so no manual edits are required for a standard local setup.
+
+If you want to customise any value (e.g. `APP_URL`, mail settings), copy the file first:
 
 ```bash
 cp src/.env.example src/.env
-```
-
-Then open `src/.env` and set the following database variables to match the Docker Compose configuration:
-
-```dotenv
-APP_URL=http://localhost:8000
-
-DB_CONNECTION=pgsql
-DB_HOST=db
-DB_PORT=5432
-DB_DATABASE=laravel
-DB_USERNAME=laravel
-DB_PASSWORD=secret
-
-QUEUE_CONNECTION=database
-
-JWT_SECRET=   # will be generated in step 4
 ```
 
 ### 3. Build and start containers
@@ -76,20 +61,12 @@ This starts four services:
 | `laravel_postgres` | PostgreSQL database | 5432 |
 | `laravel_queue` | Laravel queue worker | — |
 
-### 4. Generate application keys
+### 4. Seed test data
+
+> `APP_KEY`, `JWT_SECRET`, and database migrations are handled **automatically** by the container entrypoint on first start. Wait ~10 seconds after `docker compose up` before running the command below.
 
 ```bash
-# Application key
-docker compose exec app php artisan key:generate
-
-# JWT secret
-docker compose exec app php artisan jwt:secret
-```
-
-### 5. Run migrations and seeders
-
-```bash
-docker compose exec app php artisan migrate --seed
+docker compose exec app php artisan db:seed
 ```
 
 This creates all tables and seeds two test users:
@@ -99,7 +76,7 @@ This creates all tables and seeds two test users:
 | User 1 | example1@mail.net | password |
 | User 2 | example2@mail.net | password |
 
-### 6. Verify the installation
+### 5. Verify the installation
 
 ```bash
 curl http://localhost:8000/api/auth/login \
